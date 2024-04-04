@@ -500,7 +500,6 @@ permalink: /gamescreenML
       while (fourthnumber > 2) {
         fourthnumber = Math.round(fourthnumber/2)
       }
-      siblings = fourthnumber
       parents = fourthnumber
 
       // code to send POST request
