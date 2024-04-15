@@ -94,12 +94,15 @@ permalink: /datastructures
     <input type="number" min="1" max="100" class="white-input" placeholder="First number..." id="firstnumber"><br>
     <input type="number" min="1" max="100" class="white-input" placeholder="Second number..." id="secondnumber"><br>
     <hr class="horizontalline">
-    <button class="button" onclick="submit()">GAMBA</button><br>
+    <button class="button" onclick="getrate()">GAMBA</button><br>
     <h2 class="regulartext"><span id="result"></span></h2>
+    <h2 class="regulartext"><span id="result2"></span></h2>
+    <hr class="horizontalline">
+    <h2 class="regulartext"><span id="result3"></span></h2>
 </body>
 
 <script>
-    function submit() {
+    function getrate() {
         // Inputs (name, sex, age, parent/children, country, alone)
         inputname = document.getElementById("name");
         name = inputname.value;
@@ -161,6 +164,108 @@ permalink: /datastructures
         siblings = secondnumber
 
         // Fetch API to get probability of survivability using Titanic ML
+        var url = "http://127.0.0.1:8086/api/ds/"
+        var body = {
+            name: name,
+            socialclass: pclass,
+            age: age,
+            sex: sex,
+            siblings: siblings,
+            family: parentchildren,
+            fare: fare,
+            port: embarked,
+            alone: alone
+        }
+        var requestOptions = {
+            method: "POST",
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+            redirect: "follow"
+        };
+        fetch(url, requestOptions)
+        .then(response => {
+            if (response.status !== 200) {
+                return;
+            }
+            response.json().then(data => {
+                console.log("Data received")
+                var survivability = data;
+                var survivabilitypercent = Math.round(survivability * 100);
+                var vaccinationrate = survivabilitypercent / 100
+                document.getElementById("result").textContent = "Based on your information and your luck, the vaccination rate for those around you is:";
+                document.getElementById("result2").textContent = vaccinationrate
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        }); 
+
+        setTimeout(function() {
+            getrisk()
+        }, 500);
+    }
+
+    function getrisk() {
+        // get values to feed into covid ml
+        // random numbers (new_cases, total_cases)
+        firstnumberinput = document.getElementById("firstnumber");
+        secondnumberinput = document.getElementById("secondnumber");
+        firstnumber = firstnumberinput.value;
+        secondnumber = secondnumberinput.value;
+
+        originalfirst = firstnumber;
+        originalsecond = secondnumber;
+        inputs = [firstnumber, secondnumber];
+        for (let i = inputs.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [inputs[i], inputs[j]] = [inputs[j], inputs[i]];
+        }
+        [firstnumber, secondnumber] = inputs;
         
+        firstnumber = firstnumber * 60
+        secondnumber = secondnumber * 60
+
+        if (firstnumber > secondnumber) {
+            var total_cases = firstnumber / 3;
+            var new_cases = secondnumber / 3;
+        }
+        else {
+            var new_cases = firstnumber;
+            var total_cases = secondnumber;
+        }
+
+        var vaccination_rate = document.getElementById("result2").textContent
+        var unprocessedrecovery_rate = vaccination_rate * 4/5 * 100
+        var recovery_rate = Math.round(unprocessedrecovery_rate) / 100
+
+        // send fetch to api to get risk
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            "new_cases": new_cases,
+            "total_cases": total_cases,
+            "recovery_rate": recovery_rate,
+            "vaccination_rate": vaccination_rate
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("http://127.0.0.1:8086/api/ds/risk", requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                var risk = result;
+                var riskpercent = Math.round(risk * 100);
+                document.getElementById('result3').textContent = "Your risk of getting COVID is " + riskpercent + "%";
+                }
+            )
+            .catch(error => console.log('error', error));
     }
 </script>
