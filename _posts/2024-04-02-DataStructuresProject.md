@@ -200,6 +200,7 @@ permalink: /datastructures
         })
         .catch(err => {
             console.log(err)
+            document.getElementById("result").textContent = "There was an error in calculating the rate. Please check your inputs!";
         }); 
 
         setTimeout(function() {
@@ -266,6 +267,9 @@ permalink: /datastructures
                 document.getElementById('result3').textContent = "Your risk of getting COVID is " + riskpercent + "%";
                 }
             )
-            .catch(error => console.log('error', error));
+            .catch(error => {
+                console.log('error', error)
+                document.getElementById('result3').textContent = "There was an error in calculating the risk. Please check your inputs!";
+            });
     }
 </script>
