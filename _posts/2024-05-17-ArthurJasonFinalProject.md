@@ -2,7 +2,7 @@
 layout: post
 title: Arthur and Jason part for the Final Project
 hide: true
-permalink: /arthurjason
+permalink: /arthurjasonproject
 ---
 
 <head>

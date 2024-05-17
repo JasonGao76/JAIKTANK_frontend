@@ -2,7 +2,7 @@
 layout: post
 title: Arthur and Jason part for the Final Project
 hide: true
-permalink: /arthurjason
+permalink: /arthurjasonplan
 ---
 
 ## Ideation for Arthur and Jason game for the final project
