@@ -18,7 +18,7 @@ permalink: /datastructures
             font-family: 'Blackletter'; /* Brush Script MT is also good */
         }
         body {
-            background-image: url(https://i.postimg.cc/CK6K8t0d/image.png);
+            /* background-image: url(https://i.postimg.cc/CK6K8t0d/image.png); */
             background-size: cover;
         }
         body::before {
@@ -200,6 +200,7 @@ permalink: /datastructures
         })
         .catch(err => {
             console.log(err)
+            document.getElementById("result").textContent = "There was an error in calculating the rate. Please check your inputs!";
         }); 
 
         setTimeout(function() {
@@ -224,8 +225,8 @@ permalink: /datastructures
         }
         [firstnumber, secondnumber] = inputs;
         
-        firstnumber = firstnumber * 60
-        secondnumber = secondnumber * 60
+        firstnumber = firstnumber * 80
+        secondnumber = secondnumber * 80
 
         if (firstnumber > secondnumber) {
             var total_cases = firstnumber / 3;
@@ -266,6 +267,9 @@ permalink: /datastructures
                 document.getElementById('result3').textContent = "Your risk of getting COVID is " + riskpercent + "%";
                 }
             )
-            .catch(error => console.log('error', error));
+            .catch(error => {
+                console.log('error', error)
+                document.getElementById('result3').textContent = "There was an error in calculating the risk. Please check your inputs!";
+            });
     }
 </script>
