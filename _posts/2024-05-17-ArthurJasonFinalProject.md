@@ -17,7 +17,7 @@ permalink: /arthurjasonproject
     <!-- options to sort/search matrix -->
     <button id="random" onclick="randomize(0, 99, initMatrix(10, 10))">Randomize</button>
     <button id="sortrow" onclick="sortrow()">Sort Row</button>
-    <button id="sortcol" onclick="sortcol()">Sort Column</button>
+    <button id="sortcol" onclick="sortcol(10, 10)">Sort Column</button>
     <!-- input for value for target -->
     <button id="search" onclick="search()">Search</button>
     <input id="target">
@@ -71,6 +71,7 @@ permalink: /arthurjasonproject
 
         // must let code know that tablematrix is a table so we can iterate through it
         matrix = document.querySelector('#tablematrix table');
+        // matrix = document.getElementById('tablematrix');
 
         // for each row, store aech value, sort it numerically, and then update row with sorted values
         Array.from(matrix.rows).forEach((row, rowIndex) => {
@@ -83,10 +84,12 @@ permalink: /arthurjasonproject
     }
 
     // sort matrix col
-    function sortcol(colSize) {
+    function sortcol(rowSize, colSize) {
         // define index limits and index
-        var bottomindex = 0;
-        var topindex = colSize - 1;
+        var bottomcolindex = 0;
+        var topcolindex = colSize - 1;
+        var bottomrowindex = 0;
+        var toprowindex = rowSize - 1;
 
         // define empty array to hold column values
         var colarray = [];
@@ -94,20 +97,34 @@ permalink: /arthurjasonproject
         // grab matrix
         matrix = document.querySelector('#tablematrix table');
 
-        // iterate through each value with index
-        for (var i = 0; i <= topindex; i++) {
-            Array.from(matrix.rows).forEach((row, rowIndex) => {
-                // colarray.push() // push the value with index i to the array?
-            })
-            console.log("yay");
+        //
+        for (bottomcolindex; bottomcolindex <= topcolindex; bottomcolindex++) {
+            for (bottomrowindex; bottomrowindex <= toprowindex; bottomrowindex++) {
+                colarray.push(matrix[bottomrowindex][bottomcolindex]) // error here, bottomcolindex not valid since matrix isnt being grabbed properly
+            }
+            colarray.sort((a, b) => a - b);
+            for (bottomrowindex; bottomrowindex <= toprowindex; bottomrowindex++) {
+                matrix[bottomrowindex][bottomcolindex] = colarray[bottomrowindex];
+            }
         }
-        Array.from(matrix.rows).forEach((row, rowIndex) => {
-            Array.from(row.cells).forEach((value, colIndex) => {
-                colarray.push(parseInt(value.textContent));
-                colarray.sort((a, b) => a - b);
-                console.log(colarray);
-            });
-        })
+
+        
+        // // iterate through each value with index
+        // for (var i = 0; i <= topindex; i++) {
+        //     Array.from(matrix.rows).forEach((row, rowIndex) => {
+        //         console.log(row);
+        //         console.log(rowIndex);
+        //         // colarray.push() // push the value with index i to the array?
+        //     })
+        //     console.log("yay");
+        // }
+        // Array.from(matrix.rows).forEach((row, rowIndex) => {
+        //     Array.from(row.cells).forEach((value, colIndex) => {
+        //         colarray.push(parseInt(value.textContent));
+        //         colarray.sort((a, b) => a - b);
+        //         console.log(colarray);
+        //     });
+        // })
     }
 
     // search
