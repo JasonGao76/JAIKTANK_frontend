@@ -11,16 +11,22 @@ permalink: /arthurjasonproject
 </head>
 
 <body>
+    <h1>Matrix Generator</h1>
+    <h3>By Arthur Liu and Jason Gao</h3><br>
     <!-- inputs for dimensions -->
+    Row Size: <input id="rowSize" placeholder="10"><br>
+    Column Size: <input id="colSize" placeholder="10"><br>
+    Lower Bound of Randomization: <input id="lower" placeholder="0"><br>
+    Upper Bound of Randomization: <input id="upper" placeholder="99"><br>
+    <button id="random" onclick="randomize(initMatrix())">Generate Random</button>
     <!-- table for the matrix -->
     <div id="tablematrix"></div>
     <!-- options to sort/search matrix -->
-    <button id="random" onclick="randomize(0, 99, initMatrix(10, 10))">Randomize</button>
     <button id="sortrow" onclick="sortrow()">Sort Row</button>
     <button id="sortcol" onclick="sortcol(10, 10)">Sort Column</button>
     <!-- input for value for target -->
     <button id="search" onclick="search()">Search</button>
-    <input id="target">
+    <input id="target" placeholder="Target">
 
 </body>
 
@@ -28,32 +34,46 @@ permalink: /arthurjasonproject
     // constants
     
     
-    
-
     // make blank 5x5 matrix
-    function initMatrix(rowSize, colSize) {
-        // let rowSize = 5;
-        // let colSize = 5;
+    function initMatrix() {
+        let rows = 10;
+        let cols = 10;
         let matrix = new Array();
-
-        for (let i = 0; i < rowSize; i++) {
-            matrix.push(new Array(colSize).fill(0));
+        if (document.getElementById("rowSize").value.length !== 0) {
+            rows = parseInt(document.getElementById("rowSize").value, 10)
         }
-        return matrix
+        if (document.getElementById("colSize").value.length !== 0) {
+            cols = parseInt(document.getElementById("colSize").value, 10)
+        }
+
+        for (let i = 0; i < rows; i++) {
+            matrix.push(new Array(cols).fill(0));
+        }
+        return matrix;
     }
 
-
     // randomize and update matrix
-    function randomize(lowerRand, upperRand, matrix) {
+    function randomize(matrix) {
+        let lowerRand = 0;
+        let upperRand = 99;
         const table = document.createElement('table');
-        //let lowerRand = 0
-        //let upperRand = 99
+        if (document.getElementById("lower").value.length !== 0) {
+            lowerRand = parseInt(document.getElementById("lower").value, 10);
+        }
+        if (document.getElementById("upper").value.length !== 0) {
+            upperRand = parseInt(document.getElementById("upper").value, 10);
+        }
+        if (lowerRand > upperRand) {
+            alert("Invalid random bounds")
+            return;
+        }
+        
         document.getElementById('tablematrix').innerHTML = "";
         matrix.forEach((row, rowIndex) => {
             const tr = document.createElement('tr');
             row.forEach((value, colIndex) => {
                 const td = document.createElement('td');
-                randomizedValue = lowerRand + Math.floor(Math.random() * (upperRand + 1))
+                randomizedValue = lowerRand + Math.floor(Math.random() * (upperRand - lowerRand + 1))
                 matrix[rowIndex][colIndex] = randomizedValue
                 td.textContent = randomizedValue
                 tr.appendChild(td);
@@ -81,50 +101,46 @@ permalink: /arthurjasonproject
                 row.cells[colIndex].textContent = value;
             });
         })
+
+        // call search
+        search();
     }
+
 
     // sort matrix col
     function sortcol(rowSize, colSize) {
-        // define index limits and index
-        var bottomcolindex = 0;
-        var topcolindex = colSize - 1;
-        var bottomrowindex = 0;
-        var toprowindex = rowSize - 1;
-
-        // define empty array to hold column values
-        var colarray = [];
-
         // grab matrix
-        matrix = document.querySelector('#tablematrix table');
-
-        //
-        for (bottomcolindex; bottomcolindex <= topcolindex; bottomcolindex++) {
-            for (bottomrowindex; bottomrowindex <= toprowindex; bottomrowindex++) {
-                colarray.push(matrix[bottomrowindex][bottomcolindex]) // error here, bottomcolindex not valid since matrix isnt being grabbed properly
+        const matrix = document.querySelector('#tablematrix table');
+        const matrixlist = [];
+        Array.from(matrix.rows).forEach(row => {
+            const rowValue = [];
+            Array.from(row.cells).forEach(cell => {
+                rowValue.push(parseInt(cell.textContent, 10))
+            });
+            matrixlist.push(rowValue);
+        });
+        
+        // sort columns
+        for (let bottomcolindex = 0; bottomcolindex < colSize; bottomcolindex++) {
+            let colarray = [];
+            for (let bottomrowindex = 0; bottomrowindex < rowSize; bottomrowindex++) {
+                colarray.push(matrixlist[bottomrowindex][bottomcolindex])
             }
             colarray.sort((a, b) => a - b);
-            for (bottomrowindex; bottomrowindex <= toprowindex; bottomrowindex++) {
-                matrix[bottomrowindex][bottomcolindex] = colarray[bottomrowindex];
+            for (let bottomrowindex = 0; bottomrowindex < rowSize; bottomrowindex++) {
+                matrixlist[bottomrowindex][bottomcolindex] = colarray[bottomrowindex];
             }
         }
 
-        
-        // // iterate through each value with index
-        // for (var i = 0; i <= topindex; i++) {
-        //     Array.from(matrix.rows).forEach((row, rowIndex) => {
-        //         console.log(row);
-        //         console.log(rowIndex);
-        //         // colarray.push() // push the value with index i to the array?
-        //     })
-        //     console.log("yay");
-        // }
-        // Array.from(matrix.rows).forEach((row, rowIndex) => {
-        //     Array.from(row.cells).forEach((value, colIndex) => {
-        //         colarray.push(parseInt(value.textContent));
-        //         colarray.sort((a, b) => a - b);
-        //         console.log(colarray);
-        //     });
-        // })
+        // update matrix
+        Array.from(matrix.rows).forEach((row, rowIndex) => {
+            Array.from(row.cells).forEach((cell, colIndex) => {
+                cell.textContent = matrixlist[rowIndex][colIndex];
+            });
+        });
+
+        // call search
+        search();
     }
 
     // search
@@ -142,5 +158,5 @@ permalink: /arthurjasonproject
         })
     }
     
-    randomize(0, 99, initMatrix(10, 10));
+    randomize(initMatrix());
 </script>
