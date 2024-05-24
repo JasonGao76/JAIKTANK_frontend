@@ -7,27 +7,44 @@ permalink: /arthurjasonproject
 
 <head>
     <style>
+        .box {
+            background-color: #202020; /* #262626 */
+            padding: 6px;
+            border: 4px solid black;
+        }
+        .box h2 {
+            font-size: 24;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
     <h1>Matrix Generator</h1>
     <h3>By Arthur Liu and Jason Gao</h3><br>
-    <!-- inputs for dimensions -->
-    Row Size: <input id="rowSize" placeholder="10"><br>
-    Column Size: <input id="colSize" placeholder="10"><br>
-    Lower Bound of Randomization: <input id="lower" placeholder="0"><br>
-    Upper Bound of Randomization: <input id="upper" placeholder="99"><br>
-    <button id="random" onclick="randomize(initMatrix())">Generate Random</button>
-    <!-- table for the matrix -->
-    <div id="tablematrix"></div>
-    <!-- options to sort/search matrix -->
-    <button id="sortrow" onclick="sortrow()">Sort Row</button>
-    <button id="sortcol" onclick="sortcol()">Sort Column</button>
-    <!-- input for value for target -->
-    <button id="search" onclick="search()">Search</button>
-    <input id="target" placeholder="Target">
-
+    <div class="box">
+        <!-- inputs for dimensions -->
+        <h2>Dimension and Bounds of Matrix</h2>
+        Row Size: <input id="rowSize" placeholder="10"><br>
+        Column Size: <input id="colSize" placeholder="10"><br>
+        Lower Bound of Randomization: <input id="lower" placeholder="0"><br>
+        Upper Bound of Randomization: <input id="upper" placeholder="99"><br>
+        <button id="random" onclick="randomize(initMatrix())">Generate Random</button>
+    </div><br>
+    <div class="box">
+        <!-- table for the matrix -->
+        <h2>Matrix</h2>
+        <div id="tablematrix"></div>
+    </div><br>
+    <div class="box">
+        <h2>Options to Sort and Search Matrix</h2>
+        <!-- options to sort/search matrix -->
+        <button id="sortrow" onclick="sortrow()">Sort Row</button>
+        <button id="sortcol" onclick="sortcol()">Sort Column</button>
+        <!-- input for value for target -->
+        <button id="search" onclick="search()">Search</button>
+        <input id="target" placeholder="Target">
+    </div>
 </body>
 
 <script>
@@ -109,7 +126,6 @@ permalink: /arthurjasonproject
 
         // must let code know that tablematrix is a table so we can iterate through it
         matrix = document.querySelector('#tablematrix table');
-        // matrix = document.getElementById('tablematrix');
 
         // for each row, store each value, sort it numerically, and then update row with sorted values
         Array.from(matrix.rows).forEach((row, rowIndex) => {
@@ -155,7 +171,6 @@ permalink: /arthurjasonproject
             }
             sortAlg(colarray);
             console.log("first for ran")
-            // colarray.sort((a, b) => a - b);
             for (let bottomrowindex = 0; bottomrowindex < rownumber; bottomrowindex++) {
                 matrixlist[bottomrowindex][bottomcolindex] = colarray[bottomrowindex];
             }
