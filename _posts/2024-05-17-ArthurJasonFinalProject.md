@@ -8,13 +8,43 @@ permalink: /arthurjasonproject
 <head>
     <style>
         .box {
-            background-color: #202020; /* #262626 */
+            background-color: #202020; /* #202020 */
             padding: 6px;
             border: 4px solid black;
         }
         .box h2 {
             font-size: 24;
             text-align: center;
+        }
+        .boxcontainer {
+            display: inline-block;
+            justify-content: center;
+            align-items: center; 
+            text-align: center;
+        }
+        .boxcontainer h2 {
+            font-size: 24;
+            text-align: center;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .smallbox {
+            width: 90px;
+            height: 90px;
+            display: inline-block;
+            text-align: center;
+            border: 2px solid black;
+            margin: 0;
+            font-size: 14px;
+            color: black;
+        }
+        #mistyrose {
+            background-color: #FFE4E1;
+        }
+        #aquamarine {
+            background-color: #7FFFD4;
         }
     </style>
 </head>
@@ -43,7 +73,19 @@ permalink: /arthurjasonproject
         <button id="sortcol" onclick="sortcol()">Sort Column</button>
         <!-- input for value for target -->
         <button id="search" onclick="search()">Search</button>
-        <input id="target" placeholder="Target">
+        <input id="target" placeholder="Target"><br>
+    </div><br>
+    <div class="box">
+        <!-- <div class="boxcontainer"> -->
+            <!-- colors for search -->
+            <h2>Color of Highlight for Search</h2>
+            <div class="buttons">
+                <button id="mistyrose" class="smallbox">Misty Rose</button>
+                <button id="aquamarine" class="smallbox">Aquamarine</button>
+                <button id="" class="smallbox">3</button>
+                <button id="" class="smallbox">4</button>
+            </div>
+        <!-- </div> -->
     </div>
 </body>
 
@@ -187,15 +229,33 @@ permalink: /arthurjasonproject
         search();
     }
 
+    // determine color for search highlight
+    document.addEventListener("DOMContentLoaded", function() {
+        const buttons = document.querySelectorAll('.smallbox')
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                search.call(this);
+            });
+        });
+    });
+
     // search
     function search() {
+        var buttonid = this.id;
+        let color = "#FFE4E1";
+        if (buttonid === "mistyrose") {
+            color = "#FFE4E1";
+        }
+        else if (buttonid === "aquamarine") {
+            color = "#7FFFD4";
+        }
         matrix = document.querySelector('#tablematrix table');
         Array.from(matrix.rows).forEach((row, rowIndex) => {
             Array.from(row.cells).forEach((value, colIndex) => {
                 value.style.backgroundColor = "";
                 value.style.color = "";
                 if (parseInt(value.textContent, 10) === parseInt(document.getElementById("target").value, 10)) {
-                    value.style.backgroundColor = "mistyrose";
+                    value.style.backgroundColor = color;
                     value.style.color = "black";
                 }
             })
